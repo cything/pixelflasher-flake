@@ -15,7 +15,7 @@
         # system.
 
         packages.default = with pkgs; python3Packages.buildPythonApplication rec {
-          pname = "PixelFlasher";
+          pname = "pixelflasher";
           version = "7.10.0.0";
           format = "setuptools";
 
@@ -52,10 +52,20 @@
             python3Packages.pyinstaller
           ];
 
-          buildPhase = ''
+          buildPhase = 
+          let
+            specFile =
+              if stdenv.hostPlatform.isDarwin then
+                if stdenv.hostPlatform.isisAarch64 then
+                  "build-on-mac"
+                else
+                  "build-on-mac-intel-only"
+              else
+                "build-on-linux";
+          in ''
             runHook preBuild
 
-            pyinstaller --clean --noconfirm build-on-linux.spec
+            pyinstaller --clean --noconfirm ${specFile}.spec
 
             runHook postBuild
           '';
