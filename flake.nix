@@ -15,7 +15,7 @@
         # system.
 
         packages.default = with pkgs; python3Packages.buildPythonApplication rec {
-          pname = "pixelflasher";
+          pname = "PixelFlasher";
           version = "7.10.0.0";
           format = "setuptools";
 
@@ -54,7 +54,10 @@
 
           buildPhase = ''
             runHook preBuild
+
             pyinstaller --clean --noconfirm build-on-linux.spec
+
+            runHook postBuild
           '';
 
           installPhase = ''
